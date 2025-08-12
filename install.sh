@@ -14,6 +14,7 @@ PACKAGES=(
     gamescope
     flatpak
     chromium
+    plasma-systemmonitor
 )
 
 AUR_PACKAGES=(
