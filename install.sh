@@ -9,6 +9,8 @@ PACKAGES=(
     mpv
     lutris
     wine
+    mangohud
+    goverlay
     gamemode
     gamescope
     flatpak
