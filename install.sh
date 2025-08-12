@@ -38,4 +38,4 @@ if ! grep -Fxq "$UUID_LINE" /etc/fstab; then
     echo "$UUID_LINE" | sudo tee -a /etc/fstab
 fi
 
-flatpak install flathub com.github.iwalton3.jellyfin-media-player
+flatpak install --assumeyes flathub com.github.iwalton3.jellyfin-media-player
