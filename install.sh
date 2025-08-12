@@ -30,7 +30,7 @@ sudo pacman -Syu --noconfirm
 sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
 
 # Install aur packages
-sudo yay -S --noconfirm "${AUR_PACKAGES[@]}"
+yay -S --noconfirm "${AUR_PACKAGES[@]}"
 
 #Add flathub remove
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -39,6 +39,7 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 echo "options snd_hda_intel power_save=0" | sudo tee -a /etc/modprobe.d/audio_disable_powersave.conf
 
 #Mount ssd
+sudo mkdir -p /mnt/extra
 UUID_LINE='UUID=60fc72ce-8793-4f92-8641-0db9411d931e /mnt/extra ext4 defaults 0 0'
 
 # Check if line already exists in /etc/fstab
