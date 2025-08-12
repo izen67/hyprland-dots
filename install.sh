@@ -2,10 +2,8 @@
 set -e  # Exit on error
 # Packages from official repos
 PACKAGES=(
-    vesktop
     kate
     ufw
-    spotify
     steam
     nvtop
     mpv
@@ -13,16 +11,24 @@ PACKAGES=(
     wine
     gamemode
     gamescope
-    brave-bin
     flatpak
     chromium
+)
+
+AUR_PACKAGES=(
+    vesktop
+    spotify
+    brave-bin
 )
 
 # Update system
 sudo pacman -Syu --noconfirm
 
 # Install packages
-sudo yay -S --noconfirm "${PACKAGES[@]}"
+sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
+
+# Install aur packages
+sudo yay -S --noconfirm "${AUR_PACKAGES[@]}"
 
 #Add flathub remove
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
