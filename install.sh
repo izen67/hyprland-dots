@@ -45,5 +45,7 @@ if ! grep -Fxq "$UUID_LINE" /etc/fstab; then
     echo "$UUID_LINE" | sudo tee -a /etc/fstab
 fi
 
+flatpak install --assumeyes flathub com.github.tchx84.Flatseal
 flatpak install --assumeyes flathub com.github.iwalton3.jellyfin-media-player
 flatpak install --assumeyes flathub net.lutris.Lutris
+flatpak override --user --filesystem=/mnt/extra/lutris net.lutris.Lutris
