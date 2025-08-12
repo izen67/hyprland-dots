@@ -7,7 +7,6 @@ PACKAGES=(
     steam
     nvtop
     mpv
-    lutris
     wine
     mangohud
     goverlay
@@ -47,3 +46,4 @@ if ! grep -Fxq "$UUID_LINE" /etc/fstab; then
 fi
 
 flatpak install --assumeyes flathub com.github.iwalton3.jellyfin-media-player
+flatpak install --assumeyes flathub net.lutris.Lutris
