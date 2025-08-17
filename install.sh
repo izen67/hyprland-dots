@@ -40,16 +40,17 @@ yay -S --noconfirm "${AUR_PACKAGES[@]}"
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Fix speakers crackling (optional)
-read -rp "Do you want to disable audio power saving to fix speaker crackle? (y/n): " answer
-if [[ "$answer" =~ ^[Yy]$ ]]; then
-    AUDIO_LINE='options snd_hda_intel power_save=0'
-    if ! grep -Fxq "$AUDIO_LINE" /etc/modprobe.d/audio_disable_powersave.conf 2>/dev/null; then
-        echo "$AUDIO_LINE" | sudo tee -a /etc/modprobe.d/audio_disable_powersave.conf
-        echo "Audio power saving disabled."
-    else
-        echo "Audio crackle fix already applied."
-    fi
+read -rp "Do you want to disable audio power saving to fix speaker crackle? (y/n): " ans_audio
+if [[ "$ans_audio" =~ ^[Yy]$ ]]; then
+  AUDIO_LINE='options snd_hda_intel power_save=0'
+  if ! grep -Fxq "$AUDIO_LINE" /etc/modprobe.d/audio_disable_powersave.conf 2>/dev/null; then
+    echo "$AUDIO_LINE" | sudo tee -a /etc/modprobe.d/audio_disable_powersave.conf
+    echo "Audio power saving disabled."
+  else
+    echo "Audio crackle fix already applied."
+  fi
 fi
+
 
 # Mount SSD (optional)
 read -rp "Do you want to add the SSD mount to /etc/fstab? (y/n): " answer
