@@ -53,8 +53,8 @@ if [[ "$ans_audio" =~ ^[Yy]$ ]]; then
 fi
 
 # Mount SSD (optional)
-read -rp "Do you want to add the SSD mount to /etc/fstab? (y/n): " answer
-if [[ "$answer" =~ ^[Yy]$ ]]; then
+read -rp "Do you want to add the SSD mount to /etc/fstab? (y/n): " ans_fstab
+if [[ "$ans_fstab" =~ ^[Yy]$ ]]; then
   sudo mkdir -p /mnt/extra
   UUID_LINE='UUID=60fc72ce-8793-4f92-8641-0db9411d931e /mnt/extra ext4 defaults 0 0'
   if ! grep -Fxq "$UUID_LINE" /etc/fstab; then
