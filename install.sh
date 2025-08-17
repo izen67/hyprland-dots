@@ -68,3 +68,29 @@ flatpak install --assumeyes flathub com.github.tchx84.Flatseal
 flatpak install --assumeyes flathub com.github.iwalton3.jellyfin-media-player
 flatpak install --assumeyes flathub net.lutris.Lutris
 flatpak override --user --filesystem=/mnt/extra/lutris net.lutris.Lutris
+
+
+#TIMESHIFT + ADD BACKUPS TO GRUB:
+# Timeshift + grub-btrfs integration
+sudo pacman -S --needed --noconfirm grub-btrfs inotify-tools timeshift
+
+# Enable the grub-btrfsd service directory if not already
+sudo systemctl enable grub-btrfsd
+
+# Patch ExecStart line in the systemd service file
+SERVICE_FILE="/etc/systemd/system/grub-btrfsd.service"
+
+if [[ -f "$SERVICE_FILE" ]]; then
+    # Already has a local override
+    sudo sed -i 's|ExecStart=.*|ExecStart=/usr/bin/grub-btrfsd --syslog --timeshift-auto|' "$SERVICE_FILE"
+else
+    # Create a full override copy
+    sudo systemctl edit --full grub-btrfsd --force
+    sudo sed -i 's|ExecStart=.*|ExecStart=/usr/bin/grub-btrfsd --syslog --timeshift-auto|' \
+        /etc/systemd/system/grub-btrfsd.service
+fi
+
+# Reload systemd and restart the service
+sudo systemctl daemon-reexec
+sudo systemctl restart grub-btrfsd
+
