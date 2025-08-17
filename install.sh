@@ -15,12 +15,16 @@ PACKAGES=(
     flatpak
     chromium
     plasma-systemmonitor
+    qbittorrent
+    gwenview
+    fastfetch
 )
 
 AUR_PACKAGES=(
     vesktop
     spotify
     brave-bin
+    anydesk
 )
 
 # Update system
