@@ -106,3 +106,16 @@ EOF
 else
     echo "Skipping grub-btrfs + Timeshift setup."
 fi
+
+
+# Copy custom Hyprland configs from repo
+mkdir -p "$HOME/.config/hypr/custom"
+
+TMP_DIR=$(mktemp -d)
+git clone --depth 1 https://github.com/izen67/hyprland-dots.git "$TMP_DIR"
+
+cp -r "$TMP_DIR/custom/"* "$HOME/.config/hypr/custom/"
+
+rm -rf "$TMP_DIR"
+
+echo "Custom Hypr config installed to $HOME/.config/hypr/custom"
