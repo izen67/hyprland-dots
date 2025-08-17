@@ -35,10 +35,24 @@ sudo pacman -Syu --noconfirm
 sudo pacman -S --needed --noconfirm "${PACKAGES[@]}"
 
 # Install aur packages
-yay -S --noconfirm "${AUR_PACKAGES[@]}"
+yay -S --needed --noconfirm "${AUR_PACKAGES[@]}"
 
 #Add flathub remove
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+flatpak install --assumeyes flathub com.github.tchx84.Flatseal
+flatpak install --assumeyes flathub com.github.iwalton3.jellyfin-media-player
+flatpak install --assumeyes flathub net.lutris.Lutris
+flatpak override --user --filesystem=/mnt/extra/lutris net.lutris.Lutris
+
+# Copy custom Hyprland configs from repo
+mkdir -p "$HOME/.config/hypr/custom"
+
+TMP_DIR=$(mktemp -d)
+git clone --depth 1 https://github.com/izen67/hyprland-dots.git "$TMP_DIR"
+cp -r "$TMP_DIR/custom/"* "$HOME/.config/hypr/custom/"
+rm -rf "$TMP_DIR"
+echo "Custom Hypr config installed to $HOME/.config/hypr/custom"
 
 # Fix speakers crackling (optional)
 read -rp "Do you want to disable audio power saving to fix speaker crackle? (y/n): " ans_audio
@@ -64,13 +78,6 @@ if [[ "$ans_fstab" =~ ^[Yy]$ ]]; then
     echo "Mount entry already exists."
   fi
 fi
-
-
-flatpak install --assumeyes flathub com.github.tchx84.Flatseal
-flatpak install --assumeyes flathub com.github.iwalton3.jellyfin-media-player
-flatpak install --assumeyes flathub net.lutris.Lutris
-flatpak override --user --filesystem=/mnt/extra/lutris net.lutris.Lutris
-
 
 #TIMESHIFT + ADD BACKUPS TO GRUB:
 # Timeshift + grub-btrfs (optional)
@@ -110,14 +117,4 @@ else
 fi
 
 
-# Copy custom Hyprland configs from repo
-mkdir -p "$HOME/.config/hypr/custom"
 
-TMP_DIR=$(mktemp -d)
-git clone --depth 1 https://github.com/izen67/hyprland-dots.git "$TMP_DIR"
-
-cp -r "$TMP_DIR/custom/"* "$HOME/.config/hypr/custom/"
-
-rm -rf "$TMP_DIR"
-
-echo "Custom Hypr config installed to $HOME/.config/hypr/custom"
