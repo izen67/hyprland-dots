@@ -71,26 +71,38 @@ flatpak override --user --filesystem=/mnt/extra/lutris net.lutris.Lutris
 
 
 #TIMESHIFT + ADD BACKUPS TO GRUB:
-# Timeshift + grub-btrfs integration
-sudo pacman -S --needed --noconfirm grub-btrfs inotify-tools timeshift
+# Timeshift + grub-btrfs (optional)
+read -rp "Enable GRUB snapshots via grub-btrfs + Timeshift? (y/n): " ans
+if [[ "$ans" =~ ^[Yy]$ ]]; then
+    # Install required packages
+    sudo pacman -S --needed --noconfirm grub-btrfs inotify-tools timeshift
 
-# Enable the grub-btrfsd service directory if not already
-sudo systemctl enable grub-btrfsd
+    # Create a systemd drop-in to override ExecStart correctly
+    sudo mkdir -p /etc/systemd/system/grub-btrfsd.service.d
+    sudo tee /etc/systemd/system/grub-btrfsd.service.d/override.conf >/dev/null <<'EOF'
+[Service]
+# Clear upstream ExecStart, then set Timeshift-aware one
+ExecStart=
+ExecStart=/usr/bin/grub-btrfsd --syslog --timeshift-auto
+EOF
 
-# Patch ExecStart line in the systemd service file
-SERVICE_FILE="/etc/systemd/system/grub-btrfsd.service"
+    # Reload units and enable service
+    sudo systemctl daemon-reload
+    sudo systemctl enable --now grub-btrfsd.service
 
-if [[ -f "$SERVICE_FILE" ]]; then
-    # Already has a local override
-    sudo sed -i 's|ExecStart=.*|ExecStart=/usr/bin/grub-btrfsd --syslog --timeshift-auto|' "$SERVICE_FILE"
+    # Optional: regenerate GRUB now so the snapshots submenu is present
+    read -rp "Regenerate GRUB configuration now? (y/n): " regen
+    if [[ "$regen" =~ ^[Yy]$ ]]; then
+        if [[ -d /boot/grub ]]; then
+            sudo grub-mkconfig -o /boot/grub/grub.cfg
+        elif [[ -d /boot/grub2 ]]; then
+            sudo grub-mkconfig -o /boot/grub2/grub.cfg
+        else
+            echo "Could not find GRUB directory; skipping grub-mkconfig."
+        fi
+    fi
+
+    echo "grub-btrfsd configured for Timeshift snapshots."
 else
-    # Create a full override copy
-    sudo systemctl edit --full grub-btrfsd --force
-    sudo sed -i 's|ExecStart=.*|ExecStart=/usr/bin/grub-btrfsd --syslog --timeshift-auto|' \
-        /etc/systemd/system/grub-btrfsd.service
+    echo "Skipping grub-btrfs + Timeshift setup."
 fi
-
-# Reload systemd and restart the service
-sudo systemctl daemon-reexec
-sudo systemctl restart grub-btrfsd
-
