@@ -3,6 +3,7 @@ set -e  # Exit on error
 # Packages from official repos
 PACKAGES=(
     kate
+    ark
     ufw
     steam
     nvtop
@@ -48,7 +49,7 @@ if [[ "$ans_audio" =~ ^[Yy]$ ]]; then
     echo "Audio power saving disabled."
   else
     echo "Audio crackle fix already applied."
-  fi
+fi
 fi
 
 
@@ -62,7 +63,7 @@ if [[ "$answer" =~ ^[Yy]$ ]]; then
         echo "Mount entry added."
     else
         echo "Mount entry already exists."
-    fi
+fi
 fi
 
 flatpak install --assumeyes flathub com.github.tchx84.Flatseal
@@ -100,8 +101,8 @@ EOF
             sudo grub-mkconfig -o /boot/grub2/grub.cfg
         else
             echo "Could not find GRUB directory; skipping grub-mkconfig."
-        fi
-    fi
+fi
+fi
 
     echo "grub-btrfsd configured for Timeshift snapshots."
 else
